@@ -157,7 +157,7 @@ ul.row {
 	list-style: none;
 }
 
-ul.row::after {
+.row::after {
 	content: "";
 	display: table;
 	float: none;
