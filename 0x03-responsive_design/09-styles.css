@@ -374,11 +374,11 @@
     display: none;
   }
 
-  .header .menu-btn:checked .navbar-menu {
+  .header .menu-btn:checked ~ .navbar-menu {
     display: block;
   }
 
-  .header .menu-btn:checked .navbar-menu .nav {
+  .header .menu-btn:checked ~ .navbar-menu .nav {
     max-height: 100%;
     overflow: inherit;
   }
