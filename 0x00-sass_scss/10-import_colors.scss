@@ -1,0 +1,15 @@
+/* Import variables from different file */
+
+@import "./10-colors";
+
+.red {
+	color: $red;
+}
+
+.green {
+	color: $green;
+}
+
+.blue {
+	color: $blue;
+}
