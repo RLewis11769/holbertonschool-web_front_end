@@ -1,11 +1,9 @@
 /* Use nested declaration to change color on hover */
-$buttonColor: #FF0000;
-$hoverColor: #00FF00;
 
 button {
-    color: $buttonColor;
+    color: #FF0000;
 
     &:hover {
-        color: $hoverColor;
+        color: #00FF00;
     }
 }
