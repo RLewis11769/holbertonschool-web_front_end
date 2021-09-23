@@ -1,5 +1,5 @@
 /* Closure = function with access to parent scope even after parent has closed */
-kfldk
+
 function countPrimeNumbers () {
   // Counts prime numbers from 2 to 100 (there are 25)
   let count = 0;
