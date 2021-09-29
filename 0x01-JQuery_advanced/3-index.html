@@ -13,21 +13,23 @@
 
 		function createFamilyTree() {
 			$('body').append(`<table></table>`);
-			$('table').append(`<tr></tr>`);
+			$('table').append(`<thead></thead>`);
+			$('thead').append(`<tr></tr>`);
 			$('tr').append(`<th>Firstname</th>`);
 			$('tr').append(`<th>Lastname</th>`);
+			$('table').append(`<tbody></tbody>`);
+			$('tbody').append(`<tr></tr>`);
+			$('tbody tr').append(`<td>Guillaume</td>`);
+			$('tbody tr').append(`<td>Salva</td>`);
 			$('table').append(`<tr></tr>`);
-			$('tr:eq(1)').append(`<td>Guillaume</td>`);
-			$('tr:eq(1)').append(`<td>Salva</td>`);
-			$('table').append(`<tr></tr>`);
-			$('tr:eq(2)').append(`<td>Paulette</td>`);
-			$('tr:eq(2)').append(`<td>Salva</td>`);
+			$('tr').last().append(`<td>Paulette</td>`);
+			$('tr').last().append(`<td>Salva</td>`);
 			$('table').append(`<tr></tr>`);
 			$('tr').eq(3).append(`<td>Antoine</td>`);
-			$('tr').eq(3).append(`<td>Salva</td>`);
+			$('tr:eq(3)').append(`<td>Salva</td>`);
 		}
 	</script>
-	<title>Task 2</title>
+	<title>Task 3</title>
 
 </head>
 
