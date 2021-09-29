@@ -19,14 +19,20 @@
 			$('tr').append(`<th>Lastname</th>`);
 			$('table').append(`<tbody></tbody>`);
 			$('tbody').append(`<tr></tr>`);
-			$('tbody tr').append(`<td>Guillaume</td>`);
-			$('tbody tr').append(`<td>Salva</td>`);
-			$('table').append(`<tr></tr>`);
-			$('tr').last().append(`<td>Paulette</td>`);
-			$('tr').last().append(`<td>Salva</td>`);
-			$('table').append(`<tr></tr>`);
-			$('tr').eq(3).append(`<td>Antoine</td>`);
-			$('tr:eq(3)').append(`<td>Salva</td>`);
+			$('tbody tr').append(`<td></td>`);
+			$('tbody td').text('Guillaume');
+			$('tbody tr').append(`<td></td>`);
+			$('tbody tr td').eq(1).text('Salva');
+			$('tbody').append(`<tr>, 
+				'<td></td>',
+				'<td></td>',
+			'</tr>`);
+			$('tbody tr td').eq(2).text(`Paulette`);
+			$('tbody tr td:eq(2)').next().text(`Salva`);
+			$('tbody').append('<tr></tr>')
+			$('tbody tr:last').append(`<td></td><td></td>`);
+			$('tbody tr:last td:eq(0)').text(`Antoine`);
+			$('td').last().text(`Salva`);
 		}
 	</script>
 	<title>Task 3</title>
