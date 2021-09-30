@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+	<meta charset="utf-8" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script type="application/javascript">
+		$(document).ready(function () {
+			createSearchForm();
+		});
+
+		function createSearchForm() {
+			$('body').append(`<input type="text">
+				<input type="submit"><ul></ul>`);
+
+			$('input[type="submit"]').click(function () {
+				queryWikipedia($('input[type="text"]').val());
+			});
+		}
+
+		function addNewArticle(id, title, snippet) {
+			$('ul').append('<li></li>');
+			$('li').last().append(`<p>
+				<span>${id}</span> - 
+				<b>${title}</b>
+				</p>`);
+			$('li').last().append(`<p>${snippet}</p>`);
+		}
+
+		function queryWikipedia(search, offset = 0) {
+			$.ajax({
+				type: 'GET',
+				url: `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&format=json`,
+				dataType: 'jsonp',
+				sroffset: offset,
+				success: function (data) {
+					for (let item of data.query.search) {
+						addNewArticle(item.pageid, item.title, item.snippet);
+					}
+					buildPagination(data.query.searchinfo.totalhits, 10, offset);
+				}
+			});
+		}
+
+		function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+			let numberOfPages = Math.ceil(numberOfItems / itemsPerPage);
+			$('body').append(`<ul id="pages"></ul>`);
+			$("#pages").html("");
+			for (let p = 0; p < numberOfPages; p++) {
+				$('#pages').append(`<li><a href="#">${p + 1}</a></li>`);
+				if (p == currentOffset) {
+					$('#pages li').last().css('font-weight', 'bold');
+				}
+			}
+
+			$('#pages').css({'display': 'block', 'list-style-type': 'none'})
+			.children().css({'display': 'inline', 'padding': '5px'})
+			.children().css({'text-decoration': 'none', 'color': 'black'});
+
+			$('a').click(function () {
+				queryWikipedia($('input[type="text"]').val(), $(this).text() - 1);
+			});
+		}
+
+	</script>
+	<title>Task 8</title>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
