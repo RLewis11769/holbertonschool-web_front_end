@@ -68,7 +68,7 @@
 			};
 			url = 'http://localhost:3000/posts';
 
-			// Posts data to db.json
+			// Adds data object to db.json
 			$.ajax({
 				url: url,
 				type: 'POST',
@@ -83,12 +83,11 @@
 		}
 
 		function deletePost (id) {
-			// Deletes all rows idk
+			// Deletes entire row with id
 			$.ajax({
 				url: `http://localhost:3000/posts/${id}`,
 				type: 'DELETE',
 				success: function () {
-					// console.log(`#row-${id}`);
 					$(`#row-${id}`).remove();
 				},
 				error: function () {
