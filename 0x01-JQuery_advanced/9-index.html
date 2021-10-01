@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+	<meta charset="utf-8" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<style>
+		.loading {
+			opacity: 0.2;
+		}
+	</style>
+	
+	<script type="application/javascript">
+		$(document).ready(function () {
+			createSearchForm();
+		});
+
+		function createSearchForm() {
+			// Creates search form
+			$('body').append(`<input type="text">
+				<input type="submit"><ul></ul>`);
+
+			// When submit, passes value of textbox
+			$('input[type="submit"]').click(function () {
+				queryWikipedia($('input[type="text"]').val());
+			});
+		}
+
+		function addNewArticle(id, title, snippet) {
+			// Creates article format
+			$('ul').append('<li></li>');
+			$('li').last().append(`<p>
+				<span>${id}</span> - 
+				<b>${title}</b>
+				</p>`);
+			$('li').last().append(`<p>${snippet}</p>`);
+		}
+
+		function queryWikipedia(search, offset = 0) {
+			displayLoading(1);
+			// Queries Wikipedia API
+			$.ajax({
+				type: 'GET',
+				url: `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&format=json`,
+				dataType: 'jsonp',
+				sroffset: `${offset}`,
+				success: function (data) {
+					// Calls addNewArticle to display results
+					for (let item of data.query.search) {
+						// Only ever includes first 10 results
+						addNewArticle(item.pageid, item.title, item.snippet);
+					}
+					// If there are more results, calls queryWikipedia again
+					console.log(offset);
+					buildPagination(data.query.searchinfo.totalhits, 10, offset);
+				}
+			});
+			displayLoading(0);
+		}
+
+		function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+			// Find number of pages
+			let numberOfPages = Math.ceil(numberOfItems / itemsPerPage);
+			// Makes sure #pages is empty
+			$('body').append(`<ul id="pages"></ul>`);
+			$("#pages").html("");
+
+			// Creates links for each page
+			for (let p = 1; p <= numberOfPages; p++) {
+				$('#pages').append(`<li><a href="#">${p}</a></li>`);
+				// Bold if current page - Doesn't work for 1
+				if (p == (currentOffset / itemsPerPage)) {
+					$('#pages li').last().css('font-weight', 'bold');
+				}
+			}
+
+			// Adds css to page numbers
+			$('#pages').css({'display': 'block', 'list-style-type': 'none'})
+			.children().css({'display': 'inline', 'padding': '5px'})
+			.children().css({'text-decoration': 'none', 'color': 'black'});
+
+			// On click, passes value of textbox and offset
+			$('a').click(function () {
+				$('ul').html("");
+				queryWikipedia($('input[type="text"]').val(), $(this).text() * itemsPerPage);
+			});
+		}
+
+		function displayLoading(loading) {
+			// Wraps with div if loading
+			console.log(loading);
+			if (loading) {
+				$('ul').first().wrap('<div class="loading"></div>');
+			} else {
+				$('ul').first().unwrap();
+			}
+		}
+
+	</script>
+	<title>Task 9</title>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
