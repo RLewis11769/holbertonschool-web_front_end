@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+	<meta charset="utf-8" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script type="application/javascript">
+		$(document).ready(function () {
+			listPosts();
+			buildForm();
+		});
+
+		function addPostRow(data) {
+			// Adds data in proper format
+			$('body').append(`<p id="row-${data.id}">
+				<span>(delete)</span>
+				<span>
+				Post created with id ${data.id},
+				title: ${data.title},
+				author: ${data.author}
+				<span></p>`);
+			// Sends id to delete function on click - only works for first
+			$('span').first().click(function () {
+				console.log('okay');
+				deletePost(data.id);
+			});
+		}
+
+		function listPosts() {
+			// Retrieves data from db.json found on client side server
+			url = 'http://localhost:3000/posts';
+			$.get(url, function (data) {
+				data.forEach(addPostRow);
+			})
+			.fail(function () {
+				console.log('Server error');
+			});
+		}
+
+		function buildForm () {
+			// Creates form structure
+			$('body').append(`<form>
+				<div>
+					<label for="author">Author</label>
+					<input type="text" name="author" id="author">
+				</div>
+				<div>
+					<label for="title">Title</label>
+					<textarea name="title" id="title"></textarea>
+				</div>
+				<input type="submit" value="Submit">
+			</form>`);
+
+			// Sends form data on click
+			$('input[type="submit"]').click(function () {
+				sendForm($('#author').val(), $('#title').val());
+			});
+		}
+
+		function sendForm (author, title) {
+			// Temporarily adds message to communicate data is being sent
+			$('form').after('<p>About to send the query to the API<p>');
+			// Creates object with data to be sent
+			let data = {
+				author: `${author}`,
+				title: `${title}`
+			};
+			url = 'http://localhost:3000/posts';
+
+			// Posts data to db.json
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: data,
+				success: function (data) {
+					addPostRow(data);
+				},
+				error: function () {
+					console.log('Error sending the POST query');
+				}
+			});
+		}
+
+		function deletePost (id) {
+			// Deletes all rows idk
+			$.ajax({
+				url: `http://localhost:3000/posts/${id}`,
+				type: 'DELETE',
+				success: function () {
+					// console.log(`#row-${id}`);
+					$(`#row-${id}`).remove();
+				},
+				error: function () {
+					console.log('Post was not deleted');
+				}
+			});
+		}
+
+	</script>
+	<title>Task 12</title>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
