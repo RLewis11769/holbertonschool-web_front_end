@@ -12,15 +12,18 @@
 		});
 
 		function createSearchForm() {
+			// Creates search form
 			$('body').append(`<input type="text">
 				<input type="submit"><ul></ul>`);
 
+			// When submit, passes value of textbox
 			$('input[type="submit"]').click(function () {
 				queryWikipedia($('input[type="text"]').val());
 			});
 		}
 
 		function addNewArticle(id, title, snippet) {
+			// Creates article format
 			$('ul').append('<li></li>');
 			$('li').last().append(`<p>
 				<span>${id}</span> - 
@@ -30,37 +33,50 @@
 		}
 
 		function queryWikipedia(search, offset = 0) {
+			// Queries Wikipedia API
 			$.ajax({
 				type: 'GET',
 				url: `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&format=json`,
 				dataType: 'jsonp',
-				sroffset: offset,
+				sroffset: `${offset}`,
 				success: function (data) {
+					// Calls addNewArticle to display results
 					for (let item of data.query.search) {
+						// Only ever includes first 10 results
 						addNewArticle(item.pageid, item.title, item.snippet);
 					}
+					// If there are more results, calls queryWikipedia again
+					console.log(offset);
 					buildPagination(data.query.searchinfo.totalhits, 10, offset);
 				}
 			});
 		}
 
 		function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+			// Find number of pages
 			let numberOfPages = Math.ceil(numberOfItems / itemsPerPage);
+			// Makes sure #pages is empty
 			$('body').append(`<ul id="pages"></ul>`);
 			$("#pages").html("");
-			for (let p = 0; p < numberOfPages; p++) {
-				$('#pages').append(`<li><a href="#">${p + 1}</a></li>`);
-				if (p == currentOffset) {
+
+			// Creates links for each page
+			for (let p = 1; p <= numberOfPages; p++) {
+				$('#pages').append(`<li><a href="#">${p}</a></li>`);
+				// Bold if current page - Doesn't work for 1
+				if (p == (currentOffset / itemsPerPage)) {
 					$('#pages li').last().css('font-weight', 'bold');
 				}
 			}
 
+			// Adds css to page numbers
 			$('#pages').css({'display': 'block', 'list-style-type': 'none'})
 			.children().css({'display': 'inline', 'padding': '5px'})
 			.children().css({'text-decoration': 'none', 'color': 'black'});
 
+			// On click, passes value of textbox and offset
 			$('a').click(function () {
-				queryWikipedia($('input[type="text"]').val(), $(this).text() - 1);
+				$('ul').html("");
+				queryWikipedia($('input[type="text"]').val(), $(this).text() * itemsPerPage);
 			});
 		}
 
