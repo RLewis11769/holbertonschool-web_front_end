@@ -14,9 +14,9 @@
 		function createSearchForm() {
 			// Creates search form
 			$('body').append(`<input type="text">
-				<input type="submit"><ul></ul>`);
+				<input type="submit"><ul class="data"></ul>`);
 
-			// When submit, passes value of textbox
+			// When click submit, passes value of textbox/search term to queryWikipedia function
 			$('input[type="submit"]').click(function () {
 				queryWikipedia($('input[type="text"]').val());
 			});
@@ -24,52 +24,54 @@
 
 		function addNewArticle(id, title, snippet) {
 			// Creates article format
-			$('ul').append('<li></li>');
-			$('li').last().append(`<p>
-				<span>${id}</span> - 
-				<b>${title}</b>
-				</p>`);
-			$('li').last().append(`<p>${snippet}</p>`);
-		}
+			$('.data').append('<li></li>');
+				$('li').last().append(`<p>
+					<span>${id}</span> - 
+					<b>${title}</b>
+					</p>
+					<p>${snippet}</p>`);
+			}
 
 		function queryWikipedia(search, offset = 0) {
 			// Queries Wikipedia API
 			$.ajax({
 				type: 'GET',
-				url: `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&format=json`,
+				url: `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${search}&format=json&sroffset=${offset}`,
 				dataType: 'jsonp',
-				sroffset: `${offset}`,
 				success: function (data) {
-					// Calls addNewArticle to display results
+					// Calls addNewArticle to display results - only ever includes 10 results
 					for (let item of data.query.search) {
-						// Only ever includes first 10 results
 						addNewArticle(item.pageid, item.title, item.snippet);
 					}
-					// If there are more results, calls queryWikipedia again
-					console.log(offset);
+					// Builds pages ul
 					buildPagination(data.query.searchinfo.totalhits, 10, offset);
 				}
 			});
+			
 		}
 
 		function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
 			// Find number of pages
-			let numberOfPages = Math.ceil(numberOfItems / itemsPerPage);
-			// Makes sure #pages is empty
-			$('body').append(`<ul id="pages"></ul>`);
-			$("#pages").html("");
+			const totalpages = Math.ceil(numberOfItems / itemsPerPage);
+			const currentpage = Math.ceil(currentOffset / itemsPerPage);
+			
+			// Removes .pages if it exists and adds new .pages
+			$('.pages').remove();
+			$('body').append(`<ul class="pages"></ul>`);
 
 			// Creates links for each page
-			for (let p = 1; p <= numberOfPages; p++) {
-				$('#pages').append(`<li><a href="#">${p}</a></li>`);
-				// Bold if current page - Doesn't work for 1
-				if (p == (currentOffset / itemsPerPage)) {
-					$('#pages li').last().css('font-weight', 'bold');
+			for (let p = 1; p <= totalpages; p++) {
+				$('.pages').append(`<li><a href="#">${p}</a></li>`);
+				// Bold if current page
+				if (currentOffset == 0) {
+					$('.pages li').first().css('font-weight', 'bold');
+				} else if (p == currentpage) {
+					$('.pages li').last().css('font-weight', 'bold');
 				}
 			}
 
 			// Adds css to page numbers
-			$('#pages').css({'display': 'block', 'list-style-type': 'none'})
+			$('.pages').css({'display': 'block', 'list-style-type': 'none'})
 			.children().css({'display': 'inline', 'padding': '5px'})
 			.children().css({'text-decoration': 'none', 'color': 'black'});
 
