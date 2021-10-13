@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cookie and Local Storage</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js" integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" src="src/index.js"></script>
+</head>
+
+<body>
+	<div id="form">
+		<h1>Login to the website</h1>
+		<input type="text" id="firstname" placeholder="Firstname">
+		<input type="email" id="email" placeholder="Email">
+		<button onclick="setCookiesAndShowWelcomeMessage();">Log me in</button>
+	</div>
+
+	<h1>Cookies</h1>
+	<button onclick="showCookies();">Show the cookies</button>
+
+	<div id="welcome"></div>
+
+	<script type="text/javascript">
+		function showCookies() {
+			// Create paragraph element
+			const show = document.createElement('p');
+			// Call getCookie to update inner html to show cookies
+			show.innerHTML = `Email: ${Cookies.get('email')} - 
+				Firstname: ${Cookies.get('firstname')}`;
+			// Call function so know what to show
+			showWelcomeMessageOrForm();
+		}
+
+		function showForm() {
+			// Clear any existing data in #welcome
+			const welcome = document.getElementById('welcome');
+			if (welcome) {
+				welcome.innerHTML = '';
+			}
+			// Show form
+			document.getElementById('form').style.display = "block";
+		}
+
+		function hideForm() {
+			// Hide form
+			document.getElementById('form').style.display = "none";
+		}
+
+		function deleteCookiesAndShowForm() {
+			// Delete cookies
+			Cookies.remove('firstname');
+			Cookies.remove('email');
+			showForm();
+		}
+
+		function showWelcomeMessageOrForm() {
+			if (!document.cookie) {
+				showForm();
+			} else {
+				hideForm();
+				// Create h1 element
+				const h = document.createElement('h1');
+
+				// Update h1's html content to have string
+				// a clears everything on click with inline styling
+				h.innerHTML = `Welcome ${Cookies.get('firstname')}
+					<a style="font-weight: normal; font-style: italic; margin-left: 10px;"
+					onclick="deleteCookiesAndShowForm(); showForm();">
+					(logout)</a>`;
+				// Identify #welcome div
+				const welcome = document.getElementById('welcome');
+				// Append h1 with string to #welcome
+				welcome.appendChild(h);
+			}
+		}
+
+		function setCookiesAndShowWelcomeMessage () {
+			// Find cookie values
+			const first = document.getElementById('firstname').value;
+			const email = document.getElementById('email').value;
+			// Set cookies using js-cookie CDN
+			Cookies.set('firstname', first, {expires: 10});
+			Cookies.set('email', email, {expires: 10});
+			showWelcomeMessageOrForm();
+		}
+
+	</script>
+</body>
+
+</html>
