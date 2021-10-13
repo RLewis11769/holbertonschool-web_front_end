@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cookie and Local Storage</title>
+	<script type="text/javascript" src="src/index.js"></script>
+</head>
+
+<body>
+	<h1>Login to the website</h1>
+	<input type="text" id="firstname" placeholder="Firstname">
+	<input type="email" id="email" placeholder="Email">
+	<button onclick="setCookies();">Log me in</button>
+
+	<h1>Cookies</h1>
+	<button onclick="showCookies();">Show the cookies</button>
+
+	<script type="text/javascript">
+		function setCookies() {
+			// Create new date object
+			let date = new Date();
+			// Set time by getting current time and adding 10 days
+			// day = 24hr * 60min * 60sec but from milliseconds
+			date.setTime(date.getTime() + (10 * 24 * 60 * 60 * 1000));
+			// Convert to correct format using current timezone
+			date = date.toUTCString();
+
+			// Add cookies with expiration date
+			const first = document.getElementById('firstname').value;
+			document.cookie = `firstname=${first}; expires=${date}`;
+			const email = document.getElementById('email').value;
+			document.cookie = `email=${email}; expires=${date}`;
+		}
+
+		function showCookies() {
+			// Create paragraph element
+			const show = document.createElement('p');
+			// Call getCookie to update inner html to show cookies
+			show.innerHTML = `Email: ${getCookie('email')} - 
+				Firstname: ${getCookie('firstname')}`;
+			// Append to end of body
+			document.body.appendChild(show);
+		}
+
+		function getCookie (name) {
+			// If passed in string value, get value from element
+			if (name) {
+				return (document.getElementById(name).value);
+			} else {
+				return ('');
+			}
+		}
+	</script>
+</body>
+
+</html>
