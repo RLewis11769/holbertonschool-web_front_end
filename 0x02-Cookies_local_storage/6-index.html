@@ -12,7 +12,7 @@
 
 	<script type="text/javascript">
 
-		let availableItems = ['Shampoo', 'Soap', 'Sponge', 'Water', 'test'];
+		let availableItems = ['Shampoo', 'Soap', 'Sponge', 'Water'];
 		if (!sessionStorage) {
 			alert('Sorry, your browser does not support Web storage. Try again with a better one');
 		} else {
@@ -33,7 +33,7 @@
 				// for every item in array, creates li and adds to ul
 				let li = document.createElement('li');
 				li.innerHTML = item;
-				// When click on each li, adds to local storage
+				// When click on each li, adds to session storage
 				li.addEventListener('click', () => {
 					addItemToCart(li.innerHTML);
 				})
