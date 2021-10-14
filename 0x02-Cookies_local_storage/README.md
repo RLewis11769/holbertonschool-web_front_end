@@ -26,3 +26,13 @@ npm i -D webpack-cli
 ```
 node_modules/.bin/webpack-dev-server
 ```
+
+## JS-Cookie
+
+1. Make sure js-cookie installed with:
+
+```
+npm i js-cookie
+```
+
+2. Make sure script installed in header
